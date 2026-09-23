@@ -55,8 +55,10 @@ Based on professor's email ("numericals, analyticals, logicals, justifications")
 ```
 
 **Counts you'll need:**
+```
 - $C(\text{<s>}) = 3$, $C(\text{I}) = 3$, $C(\text{am}) = 2$, $C(\text{Sam}) = 2$
 - $C(\text{<s>, I}) = 2$, $C(\text{I, am}) = 2$, $C(\text{am, Sam}) = 1$, $C(\text{Sam, </s>}) = 1$
+```
 
 **Test sequence:** `<s> I am Sam </s>` → predict 4 tokens ($w_1$=I, $w_2$=am, $w_3$=Sam, $w_4$=`</s>`). So **n = 4**.
 
