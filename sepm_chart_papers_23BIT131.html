@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SEPM Activity-Diagram Chart Papers — Contest Unify & RepoViz (23BIT131)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;700&family=Patrick+Hand&family=Permanent+Marker&family=Rock+Salt&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Page setup ---------- */
+  @page {
+    size: A3 landscape;
+    margin: 0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #d9d2c5;
+    font-family: 'Patrick Hand', 'Comic Neue', cursive;
+    color: #2a2440;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  body { padding: 24px; }
+
+  /* ---------- Chart-paper sheet ---------- */
+  .sheet {
+    width: 1587px;       /* A3 landscape @ ~96dpi */
+    height: 1123px;
+    background: #fbfaf3;
+    margin: 0 auto 36px;
+    position: relative;
+    box-shadow: 0 18px 60px rgba(0,0,0,0.25);
+    overflow: hidden;
+  }
+  /* Inner cream tone to mimic chart paper */
+  .sheet::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.6) 0%, transparent 60%),
+      radial-gradient(ellipse at 70% 80%, rgba(245,240,225,0.4) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  /* Decorative green border (matches reference) */
+  .border-frame {
+    position: absolute; inset: 14px;
+    border: 6px solid #1f6b34;
+    border-radius: 6px;
+    pointer-events: none;
+    z-index: 5;
+    box-shadow: inset 0 0 0 2px #fbfaf3, inset 0 0 0 10px #1f6b34, inset 0 0 0 14px #fbfaf3;
+  }
+  /* Optional gold washi-tape corners (like the reference) */
+  .corner-tape {
+    position: absolute;
+    width: 110px; height: 22px;
+    background: repeating-linear-gradient(45deg, #f4c542 0 6px, #e7b932 6px 12px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    z-index: 6;
+    opacity: 0.92;
+  }
+  .corner-tape.tl { top: 4px; left: 4px; transform: rotate(-8deg); }
+  .corner-tape.tr { top: 4px; right: 4px; transform: rotate(6deg); }
+  .corner-tape.bl { bottom: 4px; left: 4px; transform: rotate(8deg); }
+  .corner-tape.br { bottom: 4px; right: 4px; transform: rotate(-6deg); }
+
+  /* ---------- Content grid ---------- */
+  .content {
+    position: absolute;
+    top: 38px; left: 38px; right: 38px; bottom: 38px;
+    display: grid;
+    grid-template-columns: 56px 1fr 1.45fr 56px;
+    grid-template-rows: 90px 1fr;
+    gap: 14px;
+    z-index: 2;
+  }
+
+  /* Far-left vertical student-info strip */
+  .strip-left {
+    grid-column: 1; grid-row: 1 / span 2;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 14px;
+    font-family: 'Caveat', cursive;
+    font-size: 18px;
+    color: #3a2954;
+    padding: 12px 6px;
+    border-right: 2px dashed #b9a7c8;
+  }
+  .strip-left .name { font-weight: 700; font-size: 22px; color: #2a1648; }
+  .strip-left .lbl { color: #6b4a8c; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
+
+  /* Far-right vertical conclusion strip */
+  .strip-right {
+    grid-column: 4; grid-row: 1 / span 2;
+    writing-mode: vertical-rl;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 14px;
+    font-family: 'Caveat', cursive;
+    font-size: 18px;
+    color: #3a2954;
+    padding: 12px 6px;
+    border-left: 2px dashed #b9a7c8;
+  }
+  .strip-right .conc-head {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 22px;
+    color: #1f6b34;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .strip-right .conc-body { font-size: 17px; line-height: 1.45; color: #2a1648; }
+
+  /* Header band — title */
+  .header-band {
+    grid-column: 2 / span 2; grid-row: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 18px;
+    position: relative;
+  }
+  .header-band .title {
+    font-family: 'Permanent Marker', 'Rock Salt', cursive;
+    font-size: 42px;
+    color: #4a2c74;
+    text-shadow: 2px 2px 0 #c8b3e0, 4px 4px 0 #a48ec7;
+    letter-spacing: 1.5px;
+    text-align: center;
+    line-height: 1.1;
+    transform: rotate(-1.5deg);
+  }
+  .header-band .subtitle {
+    font-family: 'Caveat', cursive;
+    font-size: 22px;
+    color: #6b4a8c;
+    margin-top: 4px;
+    transform: rotate(-0.5deg);
+  }
+
+  /* Left text column: AIM + Problem Statement */
+  .text-col {
+    grid-column: 2; grid-row: 2;
+    padding: 14px 18px;
+    background: rgba(255,255,255,0.55);
+    border: 2px solid #d4c5e0;
+    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(80,60,110,0.08);
+    font-family: 'Patrick Hand', cursive;
+    overflow: hidden;
+  }
+  .section-head {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 24px;
+    color: #1f6b34;
+    border-bottom: 2.5px solid #1f6b34;
+    padding-bottom: 4px;
+    margin-bottom: 8px;
+    margin-top: 14px;
+    letter-spacing: 1.5px;
+    transform: rotate(-0.4deg);
+    display: inline-block;
+  }
+  .section-head:first-child { margin-top: 0; }
+  .body-text {
+    font-size: 19px;
+    line-height: 1.45;
+    color: #2a1648;
+    margin-bottom: 12px;
+    text-align: justify;
+  }
+  .body-text b { color: #1f6b34; }
+
+  /* Right diagram column */
+  .diagram-col {
+    grid-column: 3; grid-row: 2;
+    background: rgba(255,255,255,0.65);
+    border: 2px solid #d4c5e0;
+    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(80,60,110,0.08);
+    padding: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+  .diagram-title {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 20px;
+    color: #1f6b34;
+    text-align: center;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+  }
+  .diagram-col svg { width: 100%; height: calc(100% - 28px); display: block; }
+
+  /* ---------- Activity-diagram SVG styles ---------- */
+  .ink        { stroke: #2a1648; stroke-width: 1.6; fill: none; }
+  .ink-thick  { stroke: #2a1648; stroke-width: 2.0; fill: none; }
+  .ink-red    { stroke: #b32121; stroke-width: 1.6; fill: none; }
+  .fill-cream { fill: #fbfaf3; }
+  .fill-shade { fill: #ece4f5; }
+  .fill-red   { fill: #fde7e7; }
+  .fill-green { fill: #e7f3e8; }
+  .node-text  { font-family: 'Patrick Hand', cursive; font-size: 12px; fill: #2a1648; text-anchor: middle; dominant-baseline: middle; }
+  .node-text-sm { font-family: 'Patrick Hand', cursive; font-size: 10.5px; fill: #2a1648; text-anchor: middle; dominant-baseline: middle; }
+  .label-text { font-family: 'Caveat', cursive; font-size: 13px; fill: #b32121; text-anchor: middle; font-weight: 700; }
+  .label-yes  { font-family: 'Caveat', cursive; font-size: 13px; fill: #1f6b34; text-anchor: middle; font-weight: 700; }
+  .connector  { font-family: 'Permanent Marker', cursive; font-size: 14px; fill: #6b4a8c; text-anchor: middle; dominant-baseline: middle; }
+  .title-text { font-family: 'Patrick Hand', cursive; font-size: 11px; fill: #6b4a8c; text-anchor: middle; }
+  /* arrowhead */
+  .arrow-head { fill: #2a1648; stroke: none; }
+  .arrow-head-red { fill: #b32121; stroke: none; }
+
+  /* Print: each sheet on its own page */
+  @media print {
+    body { background: white; padding: 0; }
+    .sheet { margin: 0; box-shadow: none; page-break-after: always; }
+    .sheet:last-child { page-break-after: avoid; }
+  }
+
+  /* Top banner above the sheets (only on screen) */
+  .top-banner {
+    max-width: 1587px;
+    margin: 0 auto 22px;
+    padding: 18px 24px;
+    background: #2a1648;
+    color: #fbfaf3;
+    border-radius: 8px;
+    font-family: 'Patrick Hand', cursive;
+  }
+  .top-banner h1 { font-family: 'Permanent Marker', cursive; font-size: 26px; margin-bottom: 6px; letter-spacing: 1px; }
+  .top-banner p  { font-size: 17px; line-height: 1.4; opacity: 0.92; }
+  .top-banner .hint { margin-top: 10px; font-size: 14px; color: #f4c542; }
+
+  @media print { .top-banner { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="top-banner">
+  <h1>SEPM Activity-Diagram Chart Papers — 23BIT131</h1>
+  <p>Two A3-landscape chart papers below: one for <b>Contest Unify</b> (contest aggregation + AI insights) and one for <b>RepoViz</b> (Python code visualizer). Each matches the reference hand-drawn poster style: green decorative border, purple ink, red error accents, ovals/rects/diamonds, ~25–30 nodes, Yes/No branch labels, and circled letter connectors.</p>
+  <p class="hint">Tip: Press Ctrl/Cmd + P and choose "A3" paper size + "Landscape" orientation + "Print backgrounds" to get a clean physical chart paper. Or save as PDF and pick the one you prefer to hand-draw from.</p>
+</div>
+
+<!-- ============================================================== -->
+<!-- POSTER 1 — CONTEST UNIFY                                        -->
+<!-- ============================================================== -->
+<div class="sheet" id="poster-contest-unify">
+  <div class="border-frame"></div>
+  <div class="corner-tape tl"></div>
+  <div class="corner-tape tr"></div>
+  <div class="corner-tape bl"></div>
+  <div class="corner-tape br"></div>
+
+  <div class="content">
+    <!-- Far-left vertical strip: Student Info -->
+    <div class="strip-left">
+      <div><span class="lbl">Name:</span> <span class="name">23BIT131 Student</span></div>
+      <div><span class="lbl">Roll No:</span> 23BIT131</div>
+      <div><span class="lbl">Div:</span> 01</div>
+      <div><span class="lbl">Sub:</span> SEPM (23IC401P)</div>
+      <div><span class="lbl">Sem:</span> 5</div>
+      <div><span class="lbl">Guide:</span> Course Faculty</div>
+    </div>
+
+    <!-- Header band: Title -->
+    <div class="header-band">
+      <div>
+        <div class="title">ContestUnify — The Unified Contest Dashboard</div>
+        <div class="subtitle">an Activity Diagram for contest aggregation + AI insights</div>
+      </div>
+    </div>
+
+    <!-- Left text column -->
+    <div class="text-col">
+      <div class="section-head">AIM</div>
+      <div class="body-text">
+        The aim of this Activity Diagram is to illustrate the <b>end-to-end process</b> of the Contest Unify platform — how upcoming and live contests are aggregated from multiple external platforms (Codeforces, LeetCode, CodeChef), cached in Supabase, displayed on a unified dashboard, and how a student-supplied Codeforces handle flows through the Gemini 1.5 Flash chatbot to produce AI performance insights.
+      </div>
+
+      <div class="section-head">Problem Statement</div>
+      <div class="body-text">
+        Designing an automated system <b>Contest Unify</b> to fetch contest metadata from multiple competitive-programming APIs, normalise formats, store in a cloud database, and display role-based views (upcoming vs live contests) on a single dashboard — while integrating a Google Gemini 1.5 Flash chatbot for Codeforces-handle-based performance analysis, handling API errors, and ensuring data freshness & insight persistence.
+      </div>
+
+      <div class="section-head">Scope</div>
+      <div class="body-text" style="font-size:17px;">
+        Covers: contest aggregation, caching, dashboard display, AI insight retrieval, and insight history persistence. Out of scope: user authentication, payment gateways, and integration with external learning-management systems.
+      </div>
+    </div>
+
+    <!-- Right diagram column: Activity Diagram (SVG) -->
+    <div class="diagram-col">
+      <div class="diagram-title">Activity Diagram — Contest Unify</div>
+      <svg viewBox="0 0 880 820" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+        <!-- arrowhead defs -->
+        <defs>
+          <polygon id="ah"  class="arrow-head"     points="0,0 8,3 0,6" />
+          <polygon id="ahr" class="arrow-head-red" points="0,0 8,3 0,6" />
+        </defs>
+
+        <!-- ===== Phase 1: Init / Cache ===== -->
+        <!-- Start -->
+        <ellipse cx="120" cy="40" rx="34" ry="18" class="ink fill-cream" />
+        <text x="120" y="40" class="node-text">Start</text>
+
+        <!-- Open Contest Unify -->
+        <rect x="62" y="78" width="116" height="42" rx="4" class="ink fill-cream" />
+        <text x="120" y="99" class="node-text-sm">Student opens</text>
+        <text x="120" y="113" class="node-text-sm">Contest Unify</text>
+        <line x1="120" y1="58" x2="120" y2="78" class="ink" marker-end="url(#ah)" />
+
+        <!-- Load cached contests -->
+        <rect x="50" y="146" width="140" height="42" rx="4" class="ink fill-cream" />
+        <text x="120" y="167" class="node-text-sm">Load cached contests</text>
+        <text x="120" y="181" class="node-text-sm">from Supabase</text>
+        <line x1="120" y1="120" x2="120" y2="146" class="ink" marker-end="url(#ah)" />
+
+        <!-- Cache fresh? -->
+        <polygon points="120,206 188,246 120,286 52,246" class="ink fill-shade" />
+        <text x="120" y="240" class="node-text-sm">Cache fresh?</text>
+        <text x="120" y="256" class="node-text-sm">(TTL &lt; 5 min)</text>
+        <line x1="120" y1="188" x2="120" y2="206" class="ink" marker-end="url(#ah)" />
+
+        <!-- Yes branch -> skip to display -->
+        <line x1="188" y1="246" x2="290" y2="246" class="ink" marker-end="url(#ah)" />
+        <text x="220" y="238" class="label-yes">Yes</text>
+
+        <!-- No branch -> fetch from APIs -->
+        <line x1="120" y1="286" x2="120" y2="316" class="ink" marker-end="url(#ah)" />
+        <text x="135" y="304" class="label-text">No</text>
+
+        <!-- Fetch from platforms (3 parallel API calls — shown as a fan-out) -->
+        <rect x="42" y="316" width="156" height="42" rx="4" class="ink fill-shade" />
+        <text x="120" y="333" class="node-text-sm">Fetch from Codeforces,</text>
+        <text x="120" y="347" class="node-text-sm">LeetCode, CodeChef APIs</text>
+        <line x1="120" y1="296" x2="120" y2="316" class="ink" marker-end="url(#ah)" />
+
+        <!-- Three parallel fetch sub-nodes (fan-out) -->
+        <rect x="-46" y="372" width="86" height="30" rx="3" class="ink fill-cream" />
+        <text x="-3" y="390" class="node-text-sm">Fetch CF</text>
+        <line x1="62" y1="343" x2="20"  y2="372" class="ink" marker-end="url(#ah)" />
+        <rect x="77"  y="372" width="86" height="30" rx="3" class="ink fill-cream" />
+        <text x="120" y="390" class="node-text-sm">Fetch LC</text>
+        <line x1="120" y1="358" x2="120" y2="372" class="ink" marker-end="url(#ah)" />
+        <rect x="200" y="372" width="86" height="30" rx="3" class="ink fill-cream" />
+        <text x="243" y="390" class="node-text-sm">Fetch CC</text>
+        <line x1="178" y1="343" x2="220" y2="372" class="ink" marker-end="url(#ah)" />
+
+        <!-- Merge into Normalise -->
+        <rect x="60" y="416" width="120" height="36" rx="4" class="ink fill-cream" />
+        <text x="120" y="434" class="node-text-sm">Normalise metadata</text>
+        <line x1="-3"  y1="402" x2="80"  y2="420" class="ink" marker-end="url(#ah)" />
+        <line x1="120" y1="402" x2="120" y2="416" class="ink" marker-end="url(#ah)" />
+        <line x1="243" y1="402" x2="160" y2="420" class="ink" marker-end="url(#ah)" />
+
+        <!-- Store in Supabase -->
+        <rect x="60" y="468" width="120" height="36" rx="4" class="ink fill-cream" />
+        <text x="120" y="486" class="node-text-sm">Store / update Supabase</text>
+        <line x1="120" y1="452" x2="120" y2="468" class="ink" marker-end="url(#ah)" />
+
+        <!-- Display dashboard -->
+        <rect x="240" y="226" width="140" height="42" rx="14" class="ink fill-green" />
+        <text x="310" y="247" class="node-text-sm">Display upcoming &amp;</text>
+        <text x="310" y="261" class="node-text-sm">live contests</text>
+        <line x1="180" y1="486" x2="240" y2="261" class="ink" marker-end="url(#ah)" />
+
+        <!-- ===== Phase 2: AI Insight ===== -->
+        <!-- Student clicks Use AI? -->
+        <polygon points="310,290 388,330 310,370 232,330" class="ink fill-shade" />
+        <text x="310" y="324" class="node-text-sm">Use AI chatbot?</text>
+        <line x1="310" y1="268" x2="310" y2="290" class="ink" marker-end="url(#ah)" />
+
+        <!-- No branch -> back to browse -->
+        <line x1="388" y1="330" x2="540" y2="330" class="ink-red" marker-end="url(#ahr)" />
+        <text x="465" y="322" class="label-text">No</text>
+        <rect x="540" y="312" width="120" height="36" rx="4" class="ink fill-cream" />
+        <text x="600" y="330" class="node-text-sm">Browse more contests</text>
+
+        <!-- Yes branch -> enter handle -->
+        <line x1="310" y1="370" x2="310" y2="400" class="ink" marker-end="url(#ah)" />
+        <text x="324" y="388" class="label-yes">Yes</text>
+
+        <rect x="240" y="400" width="140" height="42" rx="4" class="ink fill-cream" />
+        <text x="310" y="421" class="node-text-sm">Enter Codeforces handle</text>
+        <line x1="310" y1="370" x2="310" y2="400" class="ink" marker-end="url(#ah)" />
+
+        <!-- Validate handle -->
+        <polygon points="310,460 380,495 310,530 240,495" class="ink fill-shade" />
+        <text x="310" y="489" class="node-text-sm">Handle valid?</text>
+        <line x1="310" y1="442" x2="310" y2="460" class="ink" marker-end="url(#ah)" />
+
+        <!-- No -> error -->
+        <line x1="380" y1="495" x2="500" y2="495" class="ink-red" marker-end="url(#ahr)" />
+        <text x="440" y="488" class="label-text">No</text>
+        <rect x="500" y="476" width="160" height="40" rx="4" class="ink-red fill-red" />
+        <text x="580" y="490" class="node-text-sm" style="fill:#b32121">Show "invalid handle"</text>
+        <text x="580" y="504" class="node-text-sm" style="fill:#b32121">error</text>
+        <!-- loop back to enter handle -->
+        <path d="M 580 476 Q 580 410 380 421" class="ink-red" fill="none" marker-end="url(#ahr)" />
+
+        <!-- Yes -> send to Gemini -->
+        <line x1="310" y1="530" x2="310" y2="558" class="ink" marker-end="url(#ah)" />
+        <text x="324" y="546" class="label-yes">Yes</text>
+        <rect x="240" y="558" width="140" height="42" rx="4" class="ink fill-shade" />
+        <text x="310" y="579" class="node-text-sm">Send handle + prompt</text>
+        <text x="310" y="593" class="node-text-sm">to Gemini 1.5 Flash</text>
+
+        <!-- API error? -->
+        <polygon points="310,616 380,651 310,686 240,651" class="ink fill-shade" />
+        <text x="310" y="645" class="node-text-sm">Gemini API ok?</text>
+        <line x1="310" y1="600" x2="310" y2="616" class="ink" marker-end="url(#ah)" />
+
+        <!-- No -> error + retry -->
+        <line x1="380" y1="651" x2="500" y2="651" class="ink-red" marker-end="url(#ahr)" />
+        <text x="440" y="644" class="label-text">No</text>
+        <rect x="500" y="632" width="160" height="40" rx="4" class="ink-red fill-red" />
+        <text x="580" y="646" class="node-text-sm" style="fill:#b32121">Log error +</text>
+        <text x="580" y="660" class="node-text-sm" style="fill:#b32121">retry with backoff</text>
+        <path d="M 580 632 Q 580 580 380 579" class="ink-red" fill="none" marker-end="url(#ahr)" />
+
+        <!-- Yes -> receive feedback -->
+        <line x1="310" y1="686" x2="310" y2="708" class="ink" marker-end="url(#ah)" />
+        <text x="324" y="698" class="label-yes">Yes</text>
+        <rect x="240" y="708" width="140" height="36" rx="4" class="ink fill-cream" />
+        <text x="310" y="726" class="node-text-sm">Receive AI performance</text>
+        <text x="310" y="740" class="node-text-sm">feedback</text>
+
+        <!-- Save to Insight History -->
+        <rect x="60" y="660" width="140" height="42" rx="4" class="ink fill-cream" />
+        <text x="130" y="681" class="node-text-sm">Save insight to</text>
+        <text x="130" y="695" class="node-text-sm">Insight History (DB)</text>
+        <line x1="240" y1="726" x2="200" y2="700" class="ink" marker-end="url(#ah)" />
+
+        <!-- Display AI Insights -->
+        <rect x="60" y="724" width="140" height="42" rx="14" class="ink fill-green" />
+        <text x="130" y="745" class="node-text-sm">Display AI Insights</text>
+        <line x1="130" y1="702" x2="130" y2="724" class="ink" marker-end="url(#ah)" />
+
+        <!-- More queries? -->
+        <polygon points="130,786 200,811 130,836 60,811" class="ink fill-shade" />
+        <text x="130" y="808" class="node-text-sm">More queries?</text>
+        <line x1="130" y1="766" x2="130" y2="786" class="ink" marker-end="url(#ah)" />
+        <!-- Yes loop back -->
+        <path d="M 200 811 Q 460 811 460 745" class="ink" fill="none" marker-end="url(#ah)" />
+        <text x="220" y="803" class="label-yes">Yes</text>
+        <!-- No -> End -->
+        <line x1="130" y1="836" x2="130" y2="850" class="ink-red" marker-end="url(#ahr)" />
+        <text x="142" y="846" class="label-text">No</text>
+        <ellipse cx="130" cy="868" rx="34" ry="14" class="ink-red fill-cream" />
+        <text x="130" y="868" class="node-text">End</text>
+
+        <!-- Connector circle [A] -->
+        <circle cx="460" cy="745" r="11" class="ink fill-cream" />
+        <text x="460" y="745" class="connector">A</text>
+
+        <!-- Phase labels (right margin) -->
+        <text x="730" y="100" class="title-text">Phase 1 — Init &amp; Cache</text>
+        <text x="730" y="116" class="title-text">(lines from Start to</text>
+        <text x="730" y="130" class="title-text">Display Contests)</text>
+
+        <text x="730" y="460" class="title-text">Phase 2 — AI Insight</text>
+        <text x="730" y="476" class="title-text">(handle → Gemini →</text>
+        <text x="730" y="490" class="title-text">save → display)</text>
+
+        <text x="730" y="780" class="title-text">Phase 3 — Loop / End</text>
+      </svg>
+    </div>
+
+    <!-- Far-right vertical strip: Conclusion -->
+    <div class="strip-right">
+      <div class="conc-head">Conclusion</div>
+      <div class="conc-body">
+        The activity diagram for Contest Unify visualises the automated contest-aggregation &amp; AI-insight flows — fetching contest metadata from multiple platform APIs, caching in Supabase, displaying the unified dashboard, routing the student's Codeforces handle through Gemini, persisting insights, and looping back for the next query. It ensures efficient data management, error resilience (invalid-handle &amp; API-failure retries), and role-free student access to AI performance feedback.
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================== -->
+<!-- POSTER 2 — REPOVIZ                                             -->
+<!-- ============================================================== -->
+<div class="sheet" id="poster-repoviz">
+  <div class="border-frame"></div>
+  <div class="corner-tape tl"></div>
+  <div class="corner-tape tr"></div>
+  <div class="corner-tape bl"></div>
+  <div class="corner-tape br"></div>
+
+  <div class="content">
+    <!-- Far-left vertical strip: Student Info -->
+    <div class="strip-left">
+      <div><span class="lbl">Name:</span> <span class="name">23BIT131 Student</span></div>
+      <div><span class="lbl">Roll No:</span> 23BIT131</div>
+      <div><span class="lbl">Div:</span> 01</div>
+      <div><span class="lbl">Sub:</span> SEPM (23IC401P)</div>
+      <div><span class="lbl">Sem:</span> 5</div>
+      <div><span class="lbl">Guide:</span> Course Faculty</div>
+    </div>
+
+    <!-- Header band: Title -->
+    <div class="header-band">
+      <div>
+        <div class="title">RepoViz — The Python Code Visualizer</div>
+        <div class="subtitle">an Activity Diagram for the 4-stage parsing &amp; graph pipeline</div>
+      </div>
+    </div>
+
+    <!-- Left text column -->
+    <div class="text-col">
+      <div class="section-head">AIM</div>
+      <div class="body-text">
+        The aim of this Activity Diagram is to illustrate the <b>end-to-end process</b> of the RepoViz pipeline — how a Python project path supplied on the command line is scanned for .py files, parsed via the AST module into CodeElement instances, transformed into a NetworkX directed graph with import-resolved call edges, and finally rendered through Graphviz into PNG / SVG / DOT output files.
+      </div>
+
+      <div class="section-head">Problem Statement</div>
+      <div class="body-text">
+        Designing an automated tool <b>RepoViz</b> to scan any Python codebase, extract classes / functions / methods / module-level code, resolve import aliases, build a directed call graph, and render hierarchical visualisations (hybrid / flow / simple / standard styles) — while respecting ignore patterns (venv, tests), detecting entry points, and supporting multiple output formats.
+      </div>
+
+      <div class="section-head">Scope</div>
+      <div class="body-text" style="font-size:17px;">
+        Covers: CLI parsing, recursive .py file discovery, AST extraction, alias resolution, NetworkX graph construction, and Graphviz rendering. Out of scope: cross-language projects, runtime call profiling, and live editor integration.
+      </div>
+    </div>
+
+    <!-- Right diagram column: Activity Diagram (SVG) -->
+    <div class="diagram-col">
+      <div class="diagram-title">Activity Diagram — RepoViz</div>
+      <svg viewBox="0 0 880 820" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <polygon id="ah2"  class="arrow-head"     points="0,0 8,3 0,6" />
+          <polygon id="ahr2" class="arrow-head-red" points="0,0 8,3 0,6" />
+        </defs>
+
+        <!-- Start -->
+        <ellipse cx="130" cy="36" rx="36" ry="18" class="ink fill-cream" />
+        <text x="130" y="36" class="node-text">Start</text>
+
+        <!-- CLI args -->
+        <rect x="58" y="76" width="144" height="42" rx="4" class="ink fill-cream" />
+        <text x="130" y="93" class="node-text-sm">Parse CLI args</text>
+        <text x="130" y="107" class="node-text-sm">(project_path, --ignore,</text>
+        <text x="130" y="120" class="node-text-sm">--format, --output)</text>
+        <line x1="130" y1="54" x2="130" y2="76" class="ink" marker-end="url(#ah2)" />
+
+        <!-- Valid path? -->
+        <polygon points="130,150 210,190 130,230 50,190" class="ink fill-shade" />
+        <text x="130" y="184" class="node-text-sm">project_path</text>
+        <text x="130" y="200" class="node-text-sm">valid?</text>
+        <line x1="130" y1="118" x2="130" y2="150" class="ink" marker-end="url(#ah2)" />
+
+        <!-- No -> error + exit -->
+        <line x1="210" y1="190" x2="330" y2="190" class="ink-red" marker-end="url(#ahr2)" />
+        <text x="265" y="183" class="label-text">No</text>
+        <rect x="330" y="170" width="160" height="40" rx="4" class="ink-red fill-red" />
+        <text x="410" y="184" class="node-text-sm" style="fill:#b32121">Print usage error</text>
+        <text x="410" y="198" class="node-text-sm" style="fill:#b32121">to stderr</text>
+        <line x1="410" y1="210" x2="410" y2="248" class="ink-red" marker-end="url(#ahr2)" />
+        <ellipse cx="410" cy="266" rx="34" ry="14" class="ink-red fill-cream" />
+        <text x="410" y="266" class="node-text" style="fill:#b32121">Exit (1)</text>
+
+        <!-- Yes -> Stage 1: File Scan -->
+        <line x1="130" y1="230" x2="130" y2="258" class="ink" marker-end="url(#ah2)" />
+        <text x="142" y="248" class="label-yes">Yes</text>
+
+        <rect x="48" y="258" width="164" height="48" rx="4" class="ink fill-shade" />
+        <text x="130" y="277" class="node-text-sm" style="font-weight:700">Stage 1 — File Scanner</text>
+        <text x="130" y="291" class="node-text-sm">Recursively discover .py files,</text>
+        <text x="130" y="305" class="node-text-sm">apply --ignore patterns</text>
+
+        <!-- Files found? -->
+        <polygon points="130,334 210,374 130,414 50,374" class="ink fill-shade" />
+        <text x="130" y="368" class="node-text-sm">Files found?</text>
+        <line x1="130" y1="306" x2="130" y2="334" class="ink" marker-end="url(#ah2)" />
+
+        <!-- No -> warn + exit -->
+        <line x1="210" y1="374" x2="330" y2="374" class="ink-red" marker-end="url(#ahr2)" />
+        <text x="265" y="367" class="label-text">No</text>
+        <rect x="330" y="354" width="160" height="40" rx="4" class="ink-red fill-red" />
+        <text x="410" y="368" class="node-text-sm" style="fill:#b32121">Print "no .py files</text>
+        <text x="410" y="382" class="node-text-sm" style="fill:#b32121">found" + exit</text>
+        <line x1="410" y1="394" x2="410" y2="430" class="ink-red" marker-end="url(#ahr2)" />
+        <ellipse cx="410" cy="448" rx="34" ry="14" class="ink-red fill-cream" />
+        <text x="410" y="448" class="node-text" style="fill:#b32121">Exit (1)</text>
+
+        <!-- Yes -> Stage 2: AST Parse (loop) -->
+        <line x1="130" y1="414" x2="130" y2="442" class="ink" marker-end="url(#ah2)" />
+        <text x="142" y="432" class="label-yes">Yes</text>
+
+        <rect x="48" y="442" width="164" height="48" rx="4" class="ink fill-shade" />
+        <text x="130" y="461" class="node-text-sm" style="font-weight:700">Stage 2 — AST Parser</text>
+        <text x="130" y="475" class="node-text-sm">Parse each .py file via</text>
+        <text x="130" y="489" class="node-text-sm">Python ast module</text>
+
+        <!-- Extract CodeElements -->
+        <rect x="56" y="508" width="148" height="42" rx="4" class="ink fill-cream" />
+        <text x="130" y="525" class="node-text-sm">Extract CodeElement</text>
+        <text x="130" y="539" class="node-text-sm">instances (file, class,</text>
+        <text x="130" y="552" class="node-text-sm">function, method, module)</text>
+        <line x1="130" y1="490" x2="130" y2="508" class="ink" marker-end="url(#ah2)" />
+
+        <!-- More files? -->
+        <polygon points="130,572 210,608 130,644 50,608" class="ink fill-shade" />
+        <text x="130" y="603" class="node-text-sm">More files?</text>
+        <line x1="130" y1="550" x2="130" y2="572" class="ink" marker-end="url(#ah2)" />
+
+        <!-- Yes -> loop back to Stage 2 via connector [B] -->
+        <path d="M 50 608 Q 24 608 24 466 Q 24 442 48 466" class="ink" fill="none" marker-end="url(#ah2)" />
+        <text x="32" y="540" class="label-yes" transform="rotate(-90 32 540)">Yes</text>
+        <!-- Circled-letter connector [B] for the loop-back -->
+        <circle cx="24" cy="430" r="10" class="ink fill-cream" />
+        <text x="24" y="430" class="connector">B</text>
+
+        <!-- No -> Stage 3: Graph Build -->
+        <line x1="130" y1="644" x2="130" y2="676" class="ink" marker-end="url(#ah2)" />
+        <text x="142" y="664" class="label-text">No</text>
+
+        <rect x="48" y="676" width="164" height="48" rx="4" class="ink fill-shade" />
+        <text x="130" y="695" class="node-text-sm" style="font-weight:700">Stage 3 — Graph Builder</text>
+        <text x="130" y="709" class="node-text-sm">Build NetworkX DiGraph;</text>
+        <text x="130" y="723" class="node-text-sm">resolve import aliases</text>
+
+        <!-- Add call edges -->
+        <rect x="56" y="744" width="148" height="42" rx="4" class="ink fill-cream" />
+        <text x="130" y="761" class="node-text-sm">Add directed call edges</text>
+        <text x="130" y="775" class="node-text-sm">(caller → callee); detect</text>
+        <text x="130" y="788" class="node-text-sm">__main__ entry points</text>
+        <line x1="130" y1="724" x2="130" y2="744" class="ink" marker-end="url(#ah2)" />
+
+        <!-- Stage 4: Visualizer -->
+        <rect x="360" y="744" width="180" height="48" rx="4" class="ink fill-shade" />
+        <text x="450" y="763" class="node-text-sm" style="font-weight:700">Stage 4 — Visualizer</text>
+        <text x="450" y="777" class="node-text-sm">Choose style (hybrid / flow /</text>
+        <text x="450" y="790" class="node-text-sm">simple / standard); call Graphviz</text>
+        <line x1="204" y1="765" x2="360" y2="765" class="ink" marker-end="url(#ah2)" />
+
+        <!-- Output format? -->
+        <polygon points="660,720 740,765 660,810 580,765" class="ink fill-shade" />
+        <text x="660" y="760" class="node-text-sm">Output</text>
+        <text x="660" y="776" class="node-text-sm">format?</text>
+        <line x1="540" y1="765" x2="580" y2="765" class="ink" marker-end="url(#ah2)" />
+
+        <!-- png -->
+        <line x1="740" y1="765" x2="800" y2="700" class="ink" marker-end="url(#ah2)" />
+        <text x="780" y="730" class="label-yes">png</text>
+        <rect x="780" y="668" width="86" height="36" rx="4" class="ink fill-cream" />
+        <text x="823" y="690" class="node-text-sm">Render PNG</text>
+
+        <!-- svg -->
+        <line x1="740" y1="765" x2="800" y2="765" class="ink" marker-end="url(#ah2)" />
+        <text x="780" y="755" class="label-yes">svg</text>
+        <rect x="800" y="746" width="86" height="36" rx="4" class="ink fill-cream" />
+        <text x="843" y="768" class="node-text-sm">Render SVG</text>
+
+        <!-- both / all -->
+        <line x1="740" y1="765" x2="800" y2="830" class="ink" marker-end="url(#ah2)" />
+        <text x="780" y="810" class="label-yes">both/all</text>
+        <rect x="780" y="824" width="86" height="36" rx="4" class="ink fill-cream" />
+        <text x="823" y="846" class="node-text-sm">PNG+SVG+DOT</text>
+
+        <!-- Each render flows to its own Save node (reduces arrow crowding) -->
+        <rect x="680" y="620" width="100" height="32" rx="4" class="ink fill-cream" />
+        <text x="730" y="640" class="node-text-sm">Save PNG file</text>
+        <line x1="823" y1="668" x2="780" y2="652" class="ink" marker-end="url(#ah2)" />
+
+        <rect x="700" y="780" width="100" height="32" rx="4" class="ink fill-cream" />
+        <text x="750" y="800" class="node-text-sm">Save SVG file</text>
+        <line x1="843" y1="782" x2="800" y2="800" class="ink" marker-end="url(#ah2)" />
+
+        <rect x="680" y="854" width="100" height="32" rx="4" class="ink fill-cream" />
+        <text x="730" y="874" class="node-text-sm">Save DOT file</text>
+        <line x1="823" y1="860" x2="780" y2="870" class="ink" marker-end="url(#ah2)" />
+
+        <!-- All Save nodes converge into the [A] merge connector -->
+        <circle cx="660" cy="600" r="12" class="ink fill-cream" />
+        <text x="660" y="600" class="connector">A</text>
+        <line x1="680" y1="636" x2="660" y2="612" class="ink" marker-end="url(#ah2)" />
+        <line x1="700" y1="796" x2="660" y2="612" class="ink" marker-end="url(#ah2)" />
+        <line x1="680" y1="870" x2="660" y2="612" class="ink" marker-end="url(#ah2)" />
+
+        <!-- Save output file (final summary) -->
+        <rect x="540" y="568" width="148" height="36" rx="4" class="ink fill-cream" />
+        <text x="614" y="588" class="node-text-sm">Save output file(s) to disk</text>
+        <line x1="660" y1="588" x2="688" y2="588" class="ink" marker-end="url(#ah2)" />
+
+        <!-- Print stats -->
+        <rect x="540" y="508" width="148" height="42" rx="4" class="ink fill-cream" />
+        <text x="614" y="524" class="node-text-sm">Print statistics</text>
+        <text x="614" y="538" class="node-text-sm">(files, classes, functions,</text>
+        <text x="614" y="552" class="node-text-sm">connections)</text>
+        <line x1="614" y1="568" x2="614" y2="550" class="ink" marker-end="url(#ah2)" />
+
+        <!-- End -->
+        <ellipse cx="614" cy="468" rx="36" ry="18" class="ink fill-cream" />
+        <text x="614" y="468" class="node-text">End</text>
+        <line x1="614" y1="508" x2="614" y2="486" class="ink" marker-end="url(#ah2)" />
+
+        <!-- Phase labels (right margin) -->
+        <text x="730" y="60" class="title-text">Phase 1 — CLI &amp; Init</text>
+        <text x="730" y="76" class="title-text">(parse + validate path)</text>
+
+        <text x="730" y="290" class="title-text">Phase 2 — Scan &amp; AST</text>
+        <text x="730" y="306" class="title-text">(file loop)</text>
+
+        <text x="730" y="680" class="title-text">Phase 3 — Graph Build</text>
+
+        <text x="730" y="730" class="title-text">Phase 4 — Render &amp; Save</text>
+        <text x="730" y="746" class="title-text">(format branch)</text>
+      </svg>
+    </div>
+
+    <!-- Far-right vertical strip: Conclusion -->
+    <div class="strip-right">
+      <div class="conc-head">Conclusion</div>
+      <div class="conc-body">
+        The activity diagram for RepoViz visualises the automated 4-stage pipeline — CLI parsing &amp; path validation, recursive .py discovery with ignore patterns, AST extraction of CodeElements, NetworkX graph construction with import-alias resolution, and Graphviz rendering of PNG / SVG / DOT output files. It ensures efficient code-structure analysis, graceful error handling (invalid path, no files, format errors), and flexible output-format selection for visualising any Python project.
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
